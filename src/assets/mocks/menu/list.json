@@ -1,0 +1,14 @@
+[
+  {
+    "name": "Home",
+    "icon": "home",
+    "url": "/main/home"
+  },
+  {
+    "name": "System Management",
+    "icon": "setting",
+    "children": [
+      { "name": "User Management", "url": "/main/system/user", "icon": "user" }
+    ]
+  }
+]

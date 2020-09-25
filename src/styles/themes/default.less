@@ -1,0 +1,58 @@
+// antd-theme-generator stylesDir目录，此文件可以配置themeVariables动态样式；主题样式也在此文件中配置
+@import "../../../dist/nz-admin/lib/nz-admin.less";
+
+// 头部导航栏样式
+.@{nz-admin-prefix}-layout-header {
+  .menu-trigger:hover .trigger {
+    color: @primary-color;
+  }
+}
+// 设置菜单栏选中颜色
+.setting-panel-content .selection-wrapper .selection {
+  color: @primary-color;
+}
+
+/** 自定义组件样式 */
+// 面包屑主题样式
+.@{nz-admin-prefix}-layout-content {
+  header {
+    color: @text-color;
+    background: @component-background;
+    border-top-color: @border-color-base;
+    .@{ant-prefix}-breadcrumb,
+    .@{ant-prefix}-breadcrumb > nz-breadcrumb-item,
+    .@{ant-prefix}-breadcrumb > nz-breadcrumb-item:last-child {
+      color: @text-color;
+    }
+
+    .action-wrapper {
+      a {
+        color: @primary-color;
+        &:hover {
+          color: @link-hover-color;
+        }
+        &:active {
+          color: @link-active-color;
+        }
+      }
+
+      .ant-input-affix-wrapper:hover .ant-input-suffix {
+        color: @primary-color;
+      }
+      .ant-input-affix-wrapper:active .ant-input-suffix {
+        color: @link-active-color;
+      }
+    }
+  }
+
+  .advanced-wrapper {
+    color: @text-color;
+    background-color: @component-background;
+    border-top-color: @border-color-base;
+  }
+}
+
+.drawer-footer {
+  border-top-color: @border-color-base;
+  background-color: @component-background;
+}

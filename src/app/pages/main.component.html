@@ -1,0 +1,40 @@
+<nz-admin-layout
+  [nzaHeaderTemplate]="headerTemplate"
+  [nzaSettingTemplate]="settingTemplate"
+  [nzaContentTemplate]="contentTemplate"
+  [nzaMenuStyle]="(setting$ | async)?.menuStyle"
+  [nzaTheme]="(setting$ | async)?.theme"
+  [nzaMenus]="menus"
+  [(nzaMenuCollapsed)]="isCollapse"
+>
+  <!-- 头部导航栏 -->
+  <!-- 方式 1: <ng-content select=".nz-admin-header"></ng-content> -->
+  <!-- <div class="nz-admin-header">
+    <span class="menu-trigger" (click)="toggleCollapse()">
+      <i
+        class="trigger"
+        nz-icon
+        [nzType]="isCollapse ? 'menu-unfold' : 'menu-fold'"
+      ></i>
+    </span>
+  </div> -->
+  <!-- <nz-footer class="nz-admin-footer">
+    <p>Copyright <i nz-icon nzType="copyright" nzTheme="outline"></i> Chao</p>
+    <p>{{ "app.version" | translate: { value: "1.0.0" } }}</p>
+  </nz-footer> -->
+</nz-admin-layout>
+
+<!-- 方式 2: <ng-template [ngTemplateOutlet]="nzAdminContent"></ng-template> -->
+<!-- 主内容 -->
+<ng-template #contentTemplate>
+  <router-outlet class="nz-admin-content"></router-outlet>
+  <nz-admin-themes></nz-admin-themes>
+</ng-template>
+<!-- 设置菜单栏 -->
+<ng-template #settingTemplate>
+  <nz-admin-layout-settings></nz-admin-layout-settings>
+</ng-template>
+<!-- 头部导航栏 -->
+<ng-template #headerTemplate>
+  <nz-admin-layout-header [(isCollapse)]="isCollapse"></nz-admin-layout-header>
+</ng-template>

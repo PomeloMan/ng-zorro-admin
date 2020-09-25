@@ -1,0 +1,82 @@
+<nz-layout>
+  <nz-header style="display: flex" attr.data-menu-theme="{{ nzaMenuTheme }}">
+    <div class="logo" style="min-width: 256px">
+      <a [href]="nzaLogo.url" target="_blank">
+        <img [src]="nzaLogo.img" alt="logo" />
+        <h1>{{ nzaLogo.text }}</h1>
+      </a>
+    </div>
+    <ul nz-menu [nzTheme]="nzaMenuTheme" nzMode="horizontal">
+      <ng-container *ngFor="let menu of nzaMenus">
+        <ng-container
+          *ngIf="
+            menu.children && menu.children.length > 0;
+            else rootMenuTemplate
+          "
+        >
+          <li
+            nz-submenu
+            nzMenuClassName="nz-admin-submenu-overlay"
+            [nzTitle]="menu.name"
+            [nzIcon]="menu.icon"
+          >
+            <ul>
+              <ng-container *ngFor="let cmenu of menu.children">
+                <li nz-menu-item nzMatchRouter [routerLink]="cmenu.url">
+                  <span>{{ cmenu.name }}</span>
+                </li>
+              </ng-container>
+            </ul>
+          </li>
+        </ng-container>
+        <ng-template #rootMenuTemplate>
+          <li nz-menu-item nz-tooltip nzMatchRouter [routerLink]="menu.url">
+            <i nz-icon [nzType]="menu.icon"></i>
+            <span>{{ menu.name }}</span>
+          </li>
+        </ng-template>
+      </ng-container>
+    </ul>
+  </nz-header>
+  <nz-layout>
+    <!-- 主内容 -->
+    <nz-content>
+      <ng-template [ngTemplateOutlet]="nzaContentTemplate"></ng-template>
+      <ng-container *ngIf="!nzaFooterTemplate; else defaultFooterTemplate">
+        <ng-content select=".nz-admin-footer"></ng-content>
+      </ng-container>
+      <ng-template
+        #defaultFooterTemplate
+        [ngTemplateOutlet]="nzaFooterTemplate"
+      ></ng-template>
+    </nz-content>
+    <!-- 右侧菜单栏 -->
+    <ng-container>
+      <nz-sider
+        class="setting-panel-wrapper fixed"
+        nzCollapsible
+        nzReverseArrow
+        nzCollapsed
+        [nzCollapsedWidth]="0"
+        [nzZeroTrigger]="nzaSettingTrigger"
+        [nzWidth]="300"
+        [nzTheme]="nzaTheme === 'dark' ? 'dark' : 'light'"
+      >
+        <!-- 设置菜单内容(2种方式) -->
+        <ng-container *ngIf="!nzaSettingTemplate; else defaultSettingTemplate">
+          <!-- 1.使用<ng-content>方式，选择class="setting-panel-content"的元素内容 -->
+          <ng-content select=".setting-panel-content"></ng-content>
+        </ng-container>
+        <!-- 2.使用ngTemplateOutlet，使用模板内容 -->
+        <ng-template
+          #defaultSettingTemplate
+          [ngTemplateOutlet]="nzaSettingTemplate"
+        ></ng-template>
+        <!-- 设置菜单图标 -->
+        <ng-template #nzaSettingTrigger>
+          <i nz-icon nzType="setting"></i>
+        </ng-template>
+      </nz-sider>
+    </ng-container>
+  </nz-layout>
+</nz-layout>

@@ -1,0 +1,31 @@
+<div class="nz-admin-layout-header">
+  <span class="menu-trigger" (click)="isCollapse = !isCollapse">
+    <i
+      class="trigger"
+      nz-icon
+      [nzType]="isCollapse ? 'menu-unfold' : 'menu-fold'"
+    ></i>
+  </span>
+
+  <div class="nav-wrapper">
+    <span
+      class="menu-trigger"
+      nz-dropdown
+      [nzDropdownMenu]="i18nMenu"
+      nzTrigger="click"
+    >
+      <i class="trigger" nz-icon nzType="global" nzTheme="outline"></i>
+    </span>
+    <nz-dropdown-menu #i18nMenu="nzDropdownMenu">
+      <ul nz-menu nzSelectable>
+        <li
+          nz-menu-item
+          *ngFor="let item of locales"
+          (click)="changeLanguage(item.code)"
+        >
+          {{ item.abbr }} {{ item.text }}
+        </li>
+      </ul>
+    </nz-dropdown-menu>
+  </div>
+</div>

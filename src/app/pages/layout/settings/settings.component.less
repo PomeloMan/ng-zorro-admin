@@ -1,0 +1,61 @@
+@import "~ng-zorro-antd/style/themes/index.less";
+.setting-panel-content {
+  height: 100%;
+  padding: 16px;
+  overflow: auto;
+  &::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
+    background-color: transparent;
+  }
+  section {
+    h3 {
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+  }
+  // 整体风格设置styles
+  .menu-theme-wrapper {
+    margin-bottom: 12px;
+    > .selection-wrapper {
+      display: flex;
+      flex-flow: row wrap;
+      > .selection {
+        position: relative;
+        margin-right: 12px;
+        margin-bottom: 12px;
+        cursor: pointer;
+        .check-wrapper {
+          position: absolute;
+          top: 0;
+          right: 0;
+          width: 100%;
+          height: 100%;
+          padding-top: 15px;
+          padding-left: 24px;
+          // color: @primary-color;
+        }
+      }
+    }
+  }
+  // 主题色
+  .theme-color-wrapper {
+    .selection-wrapper {
+      .selection {
+        width: 20px;
+        height: 20px;
+        float: left;
+        margin-right: 8px;
+        margin-bottom: 8px;
+        text-align: center;
+        color: #fff;
+        border-radius: @border-radius-base;
+        cursor: pointer;
+        &[disabled="true"] {
+          opacity: 0.25;
+          cursor: not-allowed;
+        }
+      }
+    }
+  }
+}

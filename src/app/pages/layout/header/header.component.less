@@ -1,0 +1,27 @@
+@import "~ng-zorro-antd/style/themes/index.less";
+@import "src/styles/index.less";
+
+.@{nz-admin-prefix}-layout-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .menu-trigger {
+    font-size: 20px;
+    height: @layout-header-height;
+    line-height: @layout-header-height;
+    padding: 0 16px;
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+
+  > .nav-wrapper {
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    > .menu-trigger {
+      font-size: 16px;
+      padding: 0 12px;
+    }
+  }
+}

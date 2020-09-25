@@ -1,0 +1,95 @@
+@import "~ng-zorro-antd/style/themes/index.less";
+@import "src/styles/index.less";
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: @breadcrumb-height;
+  line-height: @breadcrumb-height;
+  padding: 0 16px;
+  border-top-width: 1px;
+  border-top-style: solid;
+  position: relative;
+  z-index: 3;
+  box-shadow: 0 1px 4px @shadow-color;
+  transition: all 0.3s;
+  /** 颜色需要在 /styles.less或其引入文件中配置，这样在生成主题文件时（npm run theme）会带上自定义组件主题颜色 */
+  // color: @text-color;
+  // background: @component-background;
+  // border-top-color: @border-color-base;
+
+  // 展开高级模板修改原样式
+  &.advanced-active {
+    box-shadow: none;
+  }
+
+  .menu-wrapper {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .action-wrapper {
+    display: flex;
+    align-items: center;
+    height: inherit;
+    line-height: inherit;
+    .ant-input-affix-wrapper ::ng-deep .ant-input-suffix {
+      cursor: pointer;
+    }
+    .ant-dropdown-link {
+      font-size: 16px;
+      padding: 0 12px;
+    }
+    a {
+      font-size: 14px;
+      padding: 0 6px;
+      display: flex;
+      align-items: center;
+      height: inherit;
+      line-height: inherit;
+    }
+  }
+}
+
+// 高级模板
+.advanced-wrapper {
+  overflow: hidden;
+  position: relative;
+  z-index: 2;
+  border-top-width: 1px;
+  border-top-style: solid;
+  box-shadow: 0 1px 4px @shadow-color;
+  transition: height 0.3s;
+}
+
+.perfect-scrollbar {
+  position: relative;
+  z-index: 1;
+  &.no-header {
+    height: 100%;
+  }
+  ::ng-deep .ps {
+    padding: 16px 16px 0px;
+  }
+  ::ng-deep .ps .ps-content {
+    display: flex;
+    flex-direction: column;
+    height: inherit;
+    > *:first-child {
+      flex: auto;
+    }
+    > *:last-child {
+      margin-bottom: 24px;
+    }
+  }
+}
+
+footer {
+  text-align: center;
+  margin: 24px auto;
+  p {
+    margin: 0;
+  }
+}

@@ -1,0 +1,192 @@
+<nz-admin-layout-content
+  [breadcrumbs]="breadcrumbs"
+  [(layout)]="layout"
+  [(scroll)]="scroll"
+  [menuTemplate]="menuTemplate"
+  [advancedTemplate]="advancedTemplate"
+  [(keyword)]="keyword"
+  (search)="onSearch($event, true, true)"
+  [showAdvanced]="showAdvanced"
+>
+  <ng-container *ngIf="layout === 'table'">
+    <nz-card
+      class="table-card"
+      [nzBodyStyle]="{ padding: 0 }"
+      style="overflow: hidden"
+    >
+      <nz-admin-layout-table
+        [dataSource]="data"
+        [loading]="loading"
+        [columns]="columns"
+        [template]="columnsTemplate"
+        [scroll]="scroll"
+        [total]="total"
+        [pageIndex]="pageIndex"
+        [pageSize]="pageSize"
+        (pageIndexChange)="onSearch({ pageIndex: $event }, false, true)"
+        (pageSizeChange)="onSearch({ pageSize: $event }, false, true)"
+      >
+        <ng-template #columnsTemplate let-data let-column="column">
+          <ng-container
+            *ngIf="
+              ['address', 'operation'].includes(column.key);
+              else defaultTemplate
+            "
+          >
+            <ng-container *ngIf="'operation' === column.key">
+              <button nz-button nzType="link" nzSize="small">
+                {{ "common.view" | translate }}
+              </button>
+              <nz-divider nzType="vertical"></nz-divider>
+              <button
+                nz-button
+                nzType="link"
+                nzSize="small"
+                (click)="showDetailDrawer(data.id)"
+              >
+                {{ "common.edit" | translate }}
+              </button>
+              <nz-divider nzType="vertical"></nz-divider>
+              <button nz-button nzType="link" nzSize="small">
+                {{ "common.delete" | translate }}
+              </button>
+            </ng-container>
+            <ng-container *ngIf="'address' === column.key">
+              {{ data[column.key][0]?.name }}
+            </ng-container>
+          </ng-container>
+          <ng-template #defaultTemplate> {{ data[column.key] }} </ng-template>
+        </ng-template>
+      </nz-admin-layout-table>
+    </nz-card>
+  </ng-container>
+  <ng-container *ngIf="layout === 'grid'">
+    <nz-admin-layout-grid [dataSource]="data" [template]="gridTemplate">
+      <ng-template #gridTemplate let-data>
+        <nz-card
+          class="user-card"
+          [nzActions]="
+            data.phone != '13861800000'
+              ? [actionEdit, actionDelete, actionEllipsis]
+              : [actionEdit, actionDelete]
+          "
+          [nzBodyStyle]="{ height: '100%' }"
+        >
+          <nz-skeleton
+            [nzActive]="true"
+            [nzLoading]="loading"
+            [nzAvatar]="{ size: 'large' }"
+          >
+            <nz-card-meta
+              [nzAvatar]="avatarTemplate"
+              [nzTitle]="data.id + ' ' + data.displayName"
+              [nzDescription]="descriptionTemplate"
+            ></nz-card-meta>
+          </nz-skeleton>
+        </nz-card>
+        <ng-template #avatarTemplate>
+          <nz-avatar></nz-avatar>
+        </ng-template>
+        <ng-template #descriptionTemplate>
+          <p>{{ data.username }} {{ data.position }}</p>
+          <p>{{ data.phone }} {{ data.email }}</p>
+          <p>{{ data.address[0]?.name }}</p>
+        </ng-template>
+        <ng-template #actionEdit>
+          <i nz-icon nzType="edit"></i>
+        </ng-template>
+        <ng-template #actionDelete>
+          <i nz-icon nzType="delete"></i>
+        </ng-template>
+        <ng-template #actionEllipsis>
+          <i nz-icon nzType="ellipsis"></i>
+        </ng-template>
+      </ng-template>
+    </nz-admin-layout-grid>
+  </ng-container>
+</nz-admin-layout-content>
+
+<!-- 菜单栏 -->
+<ng-template #menuTemplate>
+  <button
+    nzaAuth="user_add"
+    nz-button
+    nzType="link"
+    nzSize="small"
+    (click)="showDetailDrawer()"
+  >
+    {{ "common.add" | translate }}
+  </button>
+  <nz-divider nzaAuth="user_add" nzType="vertical"></nz-divider>
+  <a
+    nzaAuth="user_delete"
+    nz-popconfirm
+    nzPopconfirmTitle="Are you sure delete this task?"
+    (nzOnConfirm)="delete()"
+  >
+    <button nz-button nzType="link" nzSize="small">
+      {{ "common.delete" | translate }}
+    </button>
+  </a>
+  <nz-divider nzaAuth="user_delete" nzType="vertical"></nz-divider>
+
+  <a nz-dropdown nzTrigger="click" [nzDropdownMenu]="menu">
+    {{ "common.more" | translate }} <i nz-icon nzType="down"></i>
+  </a>
+  <nz-dropdown-menu #menu="nzDropdownMenu">
+    <ul nz-menu>
+      <li nz-menu-item>{{ "common.print" | translate }}</li>
+    </ul>
+  </nz-dropdown-menu>
+</ng-template>
+<!-- 高级面板 -->
+<ng-template #advancedTemplate>
+  <nz-admin-form
+    [nzaForm]="searchForm"
+    [nzaFormItems]="searchFormItems"
+    [nzaColumn]="2"
+    (nzaSubmitted)="onSearch($event)"
+  ></nz-admin-form>
+</ng-template>
+
+<!-- add & edit -->
+<nz-drawer
+  [nzClosable]="false"
+  [nzVisible]="drawerVisible"
+  [nzMaskClosable]="false"
+  [nzMask]="true"
+  [nzWidth]="600"
+  [nzTitle]="drawerTitle"
+  (nzOnClose)="drawerVisible = false"
+  [nzBodyStyle]="{ marginBottom: '60px' }"
+>
+  <ng-template #drawerTitle>
+    {{ !!id ? ("common.edit" | translate) : ("common.add" | translate)
+    }}{{ "user.detail" | translate }}
+  </ng-template>
+  <nz-admin-form
+    #addFormComp
+    nzaLayout="vertical"
+    [nzaForm]="detailForm"
+    [nzaFormItems]="addFormItems"
+    [nzaErrorTemplate]="errorTemplate"
+    [nzaColumn]="1"
+    [nzaFormStyle]="{ padding: 0 }"
+    [nzaShowActions]="false"
+  >
+    <ng-template #errorTemplate let-control>
+      <ng-container *ngIf="control.hasError('required')">
+        {{ "validation.requiredField" | translate }}
+      </ng-container>
+      <ng-container *ngIf="control.hasError('email')">
+        {{ "validation.invalidEmail" | translate }}
+      </ng-container>
+    </ng-template>
+  </nz-admin-form>
+
+  <div class="drawer-footer">
+    <button nz-button (click)="drawerVisible = false">Cancel</button>
+    <nz-divider class="gb-transparent" nzType="vertical"></nz-divider>
+    <button nz-button nzType="primary" (click)="save()">Save</button>
+  </div>
+</nz-drawer>

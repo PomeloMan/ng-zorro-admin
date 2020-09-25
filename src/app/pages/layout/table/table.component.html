@@ -1,0 +1,53 @@
+<nz-table
+  #table
+  nzShowPagination
+  nzShowSizeChanger
+  nzShowQuickJumper
+  nzTableLayout="fixed"
+  [nzFrontPagination]="false"
+  [nzData]="dataSource"
+  [nzLoading]="loading"
+  [nzShowTotal]="rangeTemplate"
+  [nzScroll]="scroll"
+  [nzTotal]="total"
+  [nzPageIndex]="pageIndex"
+  [nzPageSize]="pageSize"
+  (nzPageIndexChange)="onPageIndexChange($event)"
+  (nzPageSizeChange)="onPageSizeChange($event)"
+>
+  <thead>
+    <tr>
+      <th
+        *ngFor="let column of columns"
+        [nzEllipsis]="column.isEllipsis || true"
+        [nzAlign]="column.align || 'center'"
+        [nzWidth]="column.width"
+      >
+        {{ column.name | translate }}
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of table.data">
+      <td
+        *ngFor="let column of columns"
+        [nzEllipsis]="column.isEllipsis || true"
+        [nzAlign]="column.align || 'center'"
+      >
+        <ng-container *ngIf="template; else defaultTemplate">
+          <ng-template
+            [ngTemplateOutlet]="template"
+            [ngTemplateOutletContext]="{ $implicit: item, column: column }"
+          ></ng-template>
+        </ng-container>
+        <ng-template #defaultTemplate>
+          {{ item[column.key] }}
+        </ng-template>
+      </td>
+    </tr>
+  </tbody>
+</nz-table>
+
+<ng-template #rangeTemplate let-range="range" let-total>
+  {{ range[0] }}-{{ range[1] }} of {{ total }} items
+</ng-template>

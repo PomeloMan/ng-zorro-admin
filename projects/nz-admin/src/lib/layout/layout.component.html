@@ -1,0 +1,33 @@
+<!-- 侧边菜单布局 -->
+<ng-container *ngIf="nzaMenuStyle.startsWith('sider')">
+  <nz-admin-menu-layout-sider
+    [nzaTheme]="nzaTheme"
+    [nzaMenus]="nzaMenus"
+    [nzaMenuStyle]="nzaMenuStyle"
+    [nzaLogo]="nzaLogo"
+    [nzaHeaderTemplate]="nzaHeaderTemplate"
+    [nzaSettingTemplate]="nzaSettingTemplate"
+    [nzaContentTemplate]="nzaContentTemplate"
+    [nzaFooterTemplate]="nzaFooterTemplate"
+    [(nzaMenuCollapsed)]="nzaMenuCollapsed"
+    attr.data-theme="{{ nzaTheme }}"
+  >
+    <ng-content select=".nz-admin-header" class="nz-admin-header"></ng-content>
+    <ng-content select=".nz-admin-footer" class="nz-admin-footer"></ng-content>
+  </nz-admin-menu-layout-sider>
+</ng-container>
+<!-- 顶部菜单布局 -->
+<ng-container *ngIf="nzaMenuStyle.startsWith('header')">
+  <nz-admin-menu-layout-header
+    [nzaTheme]="nzaTheme"
+    [nzaMenus]="nzaMenus"
+    [nzaMenuStyle]="nzaMenuStyle"
+    [nzaLogo]="nzaLogo"
+    [nzaSettingTemplate]="nzaSettingTemplate"
+    [nzaContentTemplate]="nzaContentTemplate"
+    [nzaFooterTemplate]="nzaFooterTemplate"
+    attr.data-theme="{{ nzaTheme }}"
+  >
+    <ng-content select=".nz-admin-footer" class="nz-admin-footer"></ng-content>
+  </nz-admin-menu-layout-header>
+</ng-container>

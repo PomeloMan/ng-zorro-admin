@@ -1,0 +1,79 @@
+// 基础样式
+@import "../../style/themes/default.less";
+
+.@{nz-admin-prefix}-menu-layout-sider > .@{ant-prefix}-layout,
+.@{nz-admin-prefix}-menu-layout-header > .@{ant-prefix}-layout{
+  height: 100vh;
+  overflow: hidden;
+  // 头部导航栏
+  .@{ant-prefix}-layout-header {
+    padding: 0; // 修改antd样式
+    .@{nz-admin-prefix}-header {
+      height: inherit;
+      line-height: inherit;
+      overflow: hidden;
+    }
+  }
+  // 左侧菜单栏
+  .menu-sidebar {
+    position: relative;
+    z-index: 10;
+    min-height: 100vh;
+    box-shadow: 2px 0 6px @shadow-color;
+    .menu-list {
+      // 滚动条设置
+      height: calc(100vh - @layout-header-height);
+      overflow-y: auto;
+      &::-webkit-scrollbar {
+        width: 0px;
+        height: 0px;
+        background-color: transparent;
+      }
+    }
+  }
+  .@{ant-prefix}-layout-content {
+    display: flex;
+    flex-direction: column;
+    flex: auto;
+    > *:nth-child(2) {
+      flex: auto;
+    }
+  }
+  // LOGO
+  .logo {
+    position: relative;
+    height: @layout-header-height;
+    line-height: @layout-header-height;
+    padding: 0 24px;
+    overflow: hidden;
+    transition: all 0.3s;
+    img {
+      display: inline-block;
+      height: @layout-header-height / 2;
+      width: @layout-header-height / 2;
+      vertical-align: middle;
+    }
+    h1 {
+      display: inline-block;
+      margin: 0 0 0 20px;
+      font-weight: 600;
+      font-size: 14px;
+      font-family: Avenir, Helvetica Neue, Arial, Helvetica, sans-serif;
+      vertical-align: middle;
+    }
+  }
+  .setting-panel-wrapper {
+    z-index: 12;
+    box-shadow: -1px 0px 2px @shadow-color;
+    .ant-layout-sider-zero-width-trigger-right {
+      box-shadow: -1px 1px 2px @shadow-color;
+    }
+  }
+}
+
+.@{nz-admin-prefix}-layout,
+.@{nz-admin-prefix}-submenu-overlay {
+  .@{ant-prefix}-menu-item {
+    outline: none;
+  }
+}

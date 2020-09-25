@@ -1,0 +1,36 @@
+// 主题颜色样式
+@import "../../style/themes/default.less";
+
+// 默认样式
+.@{nz-admin-prefix}-layout {
+  // 右侧侧边栏展开/收缩按钮样式
+  .@{ant-prefix}-layout-sider
+    .@{ant-prefix}-layout-sider-zero-width-trigger:hover {
+    color: @primary-color;
+  }
+}
+.@{nz-admin-prefix}-layout[data-theme="default"],
+.@{nz-admin-prefix}-layout[data-theme="compact"] {
+  .@{ant-prefix}-layout-header {
+    background-color: @component-background;
+  }
+
+  .@{ant-prefix}-layout-sider-dark {
+    .logo h1 {
+      color: @heading-color-dark;
+    }
+  }
+}
+// 顶部菜单样式
+.@{nz-admin-prefix}-layout-horizontal[data-theme="default"],
+.@{nz-admin-prefix}-layout-horizontal[data-theme="compact"] {
+  .@{ant-prefix}-layout-header[data-menu-theme="light"] {
+    background-color: @component-background;
+  }
+  .@{ant-prefix}-layout-header[data-menu-theme="dark"] {
+    background-color: @layout-header-background;
+    .logo h1 {
+      color: @heading-color-dark;
+    }
+  }
+}

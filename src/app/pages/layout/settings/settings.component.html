@@ -1,0 +1,59 @@
+<div class="setting-panel-content">
+  <!-- 菜单风格设置 -->
+  <section class="menu-theme-wrapper">
+    <h3>{{ "settings.menuStyle" | translate }}</h3>
+    <div class="selection-wrapper">
+      <ng-container
+        *ngFor="let item of (settings$ | async)?.option?.menuStyles"
+      >
+        <div
+          class="selection"
+          nz-tooltip
+          [nzTooltipTitle]="item.label | translate"
+          (click)="updateSettings({ menuStyle: item.value })"
+        >
+          <img [src]="item.url" [alt]="item.value" />
+          <div
+            class="check-wrapper"
+            *ngIf="(settings$ | async)?.value?.menuStyle === item.value"
+          >
+            <i nz-icon nzType="check"></i>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </section>
+  <!-- 主题色 -->
+  <section class="theme-color-wrapper">
+    <h3>
+      {{ "settings.themeColor" | translate }}
+      <span style="font-size: 12px"
+        >（{{ "settings.themeColorExtra" | translate }}）</span
+      >
+    </h3>
+    <div class="selection-wrapper clearfix">
+      <ng-container
+        *ngFor="let item of (settings$ | async)?.option?.primaryColors"
+      >
+        <span
+          class="selection"
+          nz-tooltip
+          [nzTooltipTitle]="item.label | translate"
+          [ngStyle]="{ 'background-color': item.value }"
+          [attr.disabled]="
+            (settings$ | async)?.value?.theme !== 'default' &&
+            (settings$ | async)?.value.primaryColor !== item.value
+          "
+          (click)="updateSettings({ primaryColor: item.value })"
+        >
+          <i
+            nz-icon
+            nzType="check"
+            *ngIf="(settings$ | async)?.value?.primaryColor === item.value"
+          ></i>
+        </span>
+      </ng-container>
+    </div>
+  </section>
+  <nz-divider></nz-divider>
+</div>

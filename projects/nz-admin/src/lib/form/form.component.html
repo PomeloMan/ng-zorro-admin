@@ -1,0 +1,242 @@
+<form
+  nz-form
+  class="nz-admin-form"
+  [nzLayout]="nzaLayout"
+  [formGroup]="nzaForm"
+  [ngStyle]="nzaFormStyle"
+  (ngSubmit)="submitForm()"
+>
+  <div nz-row [nzGutter]="16">
+    <div
+      nz-col
+      [nzSpan]="24 / nzaColumn"
+      [nzSm]="nzaColumn ? null : 24"
+      [nzLg]="nzaColumn ? null : 12"
+      [nzXl]="nzaColumn ? null : 8"
+      [nzXXl]="nzaColumn ? null : 6"
+      *ngFor="let item of nzaFormItems"
+      [hidden]="item.visible === false"
+    >
+      <!-- 数组模板 -->
+      <ng-container *ngIf="item.valueType === 'array'">
+        <nz-form-item
+          [formArrayName]="item.key"
+          *ngFor="
+            let control of nzaForm.controls[item.key].controls;
+            let index = index
+          "
+        >
+          <nz-form-label
+            *ngIf="index === 0 || nzaLayout !== 'vertical'"
+            [nzFor]="item.id + index || item.key + index"
+            [nzRequired]="item.validators && item.validators.length > 0"
+          >
+            <ng-container *ngIf="index === 0">{{ item.label }}</ng-container>
+          </nz-form-label>
+          <nz-form-control
+            class="dynamic-form-control"
+            [nzErrorTip]="nzErrorTip"
+          >
+            <!-- input -->
+            <ng-container *ngIf="item.type === 'input'">
+              <input
+                nz-input
+                [placeholder]="
+                  index != null ? item.label + (index + 1) : item.label
+                "
+                [formControlName]="index"
+                [attr.id]="
+                  index != null
+                    ? item.id + index || item.key + index
+                    : item.id || item.key
+                "
+              />
+            </ng-container>
+            <!-- radio -->
+            <ng-container *ngIf="item.type === 'radio'">
+              <nz-radio-group [formControlName]="index">
+                <label
+                  *ngFor="let option of item.options"
+                  nz-radio-button
+                  [nzValue]="option.value"
+                >
+                  {{ option.label }}
+                </label>
+              </nz-radio-group>
+            </ng-container>
+            <i
+              *ngIf="index !== 0"
+              nz-icon
+              nzType="minus-circle"
+              class="dynamic-delete-button"
+              (click)="removeField(item, i, $event)"
+            ></i>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item
+          *ngIf="
+            !item.max || nzaForm.controls[item.key].controls?.length < item.max
+          "
+        >
+          <nz-form-control>
+            <button
+              nz-button
+              nzType="dashed"
+              (click)="addField(item, $event)"
+              style="width: 100%"
+            >
+              <i nz-icon nzType="plus"></i>
+              {{ item.addButtonText || "Add field" }}
+            </button>
+          </nz-form-control>
+        </nz-form-item>
+      </ng-container>
+
+      <!-- 对象数组模板 -->
+      <ng-container *ngIf="item.valueType === 'object-array'">
+        <div
+          [formArrayName]="item.key"
+          *ngFor="
+            let control of nzaForm.controls[item.key].controls;
+            let rowIndex = index
+          "
+        >
+          <nz-form-item *ngIf="rowIndex === 0" style="margin-bottom: 0">
+            <nz-form-label>{{ item.label }}</nz-form-label>
+          </nz-form-item>
+          <div nz-row nzType="flex" nzGutter="16" [formGroupName]="rowIndex">
+            <div
+              nz-col
+              *ngFor="let formItem of item.valueAttrs; let colIndex = index"
+            >
+              <nz-form-item>
+                <nz-form-label
+                  *ngIf="rowIndex === 0"
+                  [nzFor]="formItem.id + rowIndex || formItem.key + rowIndex"
+                  [nzRequired]="
+                    formItem.validators && formItem.validators.length > 0
+                  "
+                >
+                  {{ formItem.label }}
+                </nz-form-label>
+                <nz-form-control
+                  class="dynamic-form-control"
+                  [nzErrorTip]="nzErrorTip"
+                >
+                  <!-- input -->
+                  <ng-container *ngIf="formItem.type === 'input'">
+                    <input
+                      nz-input
+                      [placeholder]="
+                        rowIndex != null
+                          ? formItem.label + (rowIndex + 1)
+                          : formItem.label
+                      "
+                      [formControlName]="formItem.key"
+                      [attr.id]="
+                        rowIndex != null
+                          ? formItem.id + rowIndex || formItem.key + rowIndex
+                          : formItem.id || formItem.key
+                      "
+                    />
+                  </ng-container>
+                  <!-- radio -->
+                  <ng-container *ngIf="formItem.type === 'radio'">
+                    <nz-radio-group [formControlName]="formItem.key">
+                      <label
+                        *ngFor="let option of formItem.options"
+                        nz-radio-button
+                        [nzValue]="option.value"
+                      >
+                        {{ option.label }}
+                      </label>
+                    </nz-radio-group>
+                  </ng-container>
+                  <i
+                    *ngIf="
+                      rowIndex !== 0 && item.valueAttrs.length === colIndex + 1
+                    "
+                    nz-icon
+                    nzType="minus-circle"
+                    class="dynamic-delete-button"
+                    (click)="removeField(item, rowIndex, $event)"
+                  ></i>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+          </div>
+        </div>
+        <nz-form-item
+          *ngIf="
+            !item.max || nzaForm.controls[item.key].controls?.length < item.max
+          "
+        >
+          <nz-form-control>
+            <button
+              nz-button
+              nzType="dashed"
+              (click)="addField(item, $event)"
+              style="width: 100%"
+            >
+              <i nz-icon nzType="plus"></i>
+              {{ item.addButtonText || "Add field" }}
+            </button>
+          </nz-form-control>
+        </nz-form-item>
+      </ng-container>
+
+      <!-- 默认模板 -->
+      <ng-container *ngIf="item.valueType == null">
+        <nz-form-item>
+          <nz-form-label
+            [nzFor]="item.id || item.key"
+            [nzRequired]="item.validators && item.validators.length > 0"
+          >
+            {{ item.label }}
+          </nz-form-label>
+          <nz-form-control [nzErrorTip]="nzErrorTip">
+            <!-- input -->
+            <ng-container *ngIf="item.type === 'input'">
+              <input
+                nz-input
+                [placeholder]="item.label"
+                [formControlName]="item.key"
+                [attr.id]="item.id || item.key"
+              />
+            </ng-container>
+            <!-- radio -->
+            <ng-container *ngIf="item.type === 'radio'">
+              <nz-radio-group [formControlName]="item.key">
+                <label
+                  *ngFor="let option of item.options"
+                  nz-radio-button
+                  [nzValue]="option.value"
+                >
+                  {{ option.label }}
+                </label>
+              </nz-radio-group>
+            </ng-container>
+          </nz-form-control>
+        </nz-form-item>
+      </ng-container>
+    </div>
+    <div nz-col [nzSpan]="24" *ngIf="nzaShowActions">
+      <button nz-button nzType (click)="resetForm($event)">
+        {{ nzaClearText }}
+      </button>
+      <nz-divider
+        nzType="vertical"
+        style="background: transparent"
+      ></nz-divider>
+      <button nz-button nzType="primary">{{ nzaOkText }}</button>
+    </div>
+  </div>
+</form>
+
+<!-- error -->
+<ng-template #nzErrorTip let-control>
+  <ng-template
+    [ngTemplateOutlet]="nzaErrorTemplate"
+    [ngTemplateOutletContext]="{ $implicit: control }"
+  ></ng-template>
+</ng-template>

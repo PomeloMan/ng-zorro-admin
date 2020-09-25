@@ -1,0 +1,21 @@
+<a
+  nz-dropdown
+  nzTrigger="click"
+  [nzDropdownMenu]="themeMenu"
+  [nzPlacement]="'topCenter'"
+>
+  <button nz-button nzSize="large" nzShape="circle">
+    <i nz-icon nzType="bg-colors" nzTheme="outline"></i>
+  </button>
+</a>
+<nz-dropdown-menu #themeMenu="nzDropdownMenu">
+  <ul nz-menu>
+    <li
+      nz-menu-item
+      *ngFor="let item of (option$ | async).themes"
+      (click)="changeTheme(item.value)"
+    >
+      {{ item.label | translate }}
+    </li>
+  </ul>
+</nz-dropdown-menu>

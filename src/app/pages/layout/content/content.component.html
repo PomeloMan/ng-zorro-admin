@@ -1,0 +1,101 @@
+<header
+  #header
+  class="content-navbar"
+  *ngIf="showHeader"
+  [ngClass]="{ 'advanced-active': showAdvanced }"
+>
+  <div class="breadcrumb-wrapper">
+    <nz-breadcrumb *ngIf="breadcrumbs && breadcrumbs.length > 0">
+      <nz-breadcrumb-item *ngFor="let item of breadcrumbs">
+        <ng-container *ngIf="item.url; else elseTemplate">
+          <a [routerLink]="item.url">{{ item.name }}</a>
+        </ng-container>
+        <ng-template #elseTemplate>{{ item.name }}</ng-template>
+      </nz-breadcrumb-item>
+    </nz-breadcrumb>
+  </div>
+  <div class="menu-wrapper">
+    <ng-template [ngTemplateOutlet]="menuTemplate"></ng-template>
+  </div>
+  <div class="action-wrapper">
+    <!-- 布局下拉框 -->
+    <a
+      nz-dropdown
+      nzTrigger="click"
+      [nzDropdownMenu]="layoutMenu"
+      *ngIf="showLayout"
+    >
+      <i
+        nz-icon
+        [nzType]="layout === 'table' ? 'table' : 'appstore'"
+        nzTheme="outline"
+      ></i>
+    </a>
+    <nz-dropdown-menu #layoutMenu="nzDropdownMenu">
+      <ul nz-menu>
+        <li nz-menu-item (click)="onLayoutChange('table')">
+          <i nz-icon nzType="table" nzTheme="outline"></i>
+          {{ "common.table" | translate }}
+        </li>
+        <li nz-menu-item (click)="onLayoutChange('grid')">
+          <i nz-icon nzType="appstore" nzTheme="outline"></i>
+          {{ "common.grid" | translate }}
+        </li>
+      </ul>
+    </nz-dropdown-menu>
+
+    <!-- 快速搜索 -->
+    <nz-input-group [nzSuffix]="suffixIconSearch" nzSize="small">
+      <input
+        type="text"
+        nz-input
+        [(ngModel)]="keyword"
+        [placeholder]="'common.quickSearch' | translate"
+        (keyup.enter)="onSearch($event)"
+      />
+      <ng-template #suffixIconSearch>
+        <i
+          nz-icon
+          class="ant-input-clear-icon"
+          nzTheme="fill"
+          nzType="close-circle"
+          *ngIf="keyword"
+          (click)="keyword = null"
+        ></i>
+        <i nz-icon nzType="search" (click)="onSearch()"></i>
+      </ng-template>
+    </nz-input-group>
+    <!-- 高级搜索 -->
+    <a
+      nz-tooltip
+      [nzTooltipTitle]="'common.advancedSearch' | translate"
+      (click)="resize()"
+      *ngIf="showAdvancedTemplate"
+    >
+      <i nz-icon [nzType]="showAdvanced ? 'up' : 'down'"></i>
+    </a>
+  </div>
+</header>
+
+<div #advanced class="advanced-wrapper">
+  <ng-template [ngTemplateOutlet]="advancedTemplate"></ng-template>
+</div>
+
+<perfect-scrollbar
+  #perfectScrollbar
+  class="perfect-scrollbar"
+  [class]="{
+    'no-header': !showHeader
+  }"
+>
+  <ng-content></ng-content>
+
+  <nz-back-top
+    [nzTarget]="scrollContentEl"
+    [nzVisibilityHeight]="40"
+  ></nz-back-top>
+  <footer *ngIf="showFooter">
+    <p>Copyright <i nz-icon nzType="copyright" nzTheme="outline"></i> Chao</p>
+    <p>{{ "app.version" | translate: { value: "1.0.0" } }}</p>
+  </footer>
+</perfect-scrollbar>

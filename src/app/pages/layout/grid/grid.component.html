@@ -1,0 +1,19 @@
+<div>
+  <div nz-row [nzGutter]="[16, 16]">
+    <div
+      nz-col
+      class="gutter-row"
+      [nzSm]="12"
+      [nzLg]="8"
+      [nzXl]="6"
+      [nzXXl]="4"
+      *ngFor="let item of dataSource"
+    >
+      <ng-template
+        [ngTemplateOutlet]="template"
+        [ngTemplateOutletContext]="{ $implicit: item }"
+      ></ng-template>
+    </div>
+  </div>
+  <ng-content></ng-content>
+</div>

@@ -1,0 +1,24 @@
+{
+  "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "../../dist/nz-admin",
+  "lib": {
+    "entryFile": "src/public-api.ts",
+    "umdModuleIds": {
+      "ng-zorro-antd": "ng-zorro-antd",
+      "ng-zorro-antd/button": "nz-button",
+      "ng-zorro-antd/divider": "nz-divider",
+      "ng-zorro-antd/form": "nz-form",
+      "ng-zorro-antd/grid": "nz-grid",
+      "ng-zorro-antd/icon": "nz-icon",
+      "ng-zorro-antd/input": "nz-input",
+      "ng-zorro-antd/layout": "nz-layout",
+      "ng-zorro-antd/menu": "nz-menu",
+      "ng-zorro-antd/radio": "nz-radio",
+      "ng-zorro-antd/select": "nz-select",
+      "ng-zorro-antd/tooltip": "nz-tooltip",
+      "ng-zorro-antd/core/wave": "nz-core-wave",
+      "ng-zorro-antd/core/transition-patch": "nz-core-transition-patch",
+      "@ant-design/icons-angular/icons": "antd-icon"
+    }
+  }
+}

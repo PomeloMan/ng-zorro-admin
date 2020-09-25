@@ -1,0 +1,23 @@
+// 基础样式
+@import "../../style/themes/default.less";
+
+.@{nz-admin-prefix}-form {
+  padding: 16px;
+
+  .dynamic-form-control {
+    position: relative;
+    .ant-input {
+      width: calc(100% - 32px);
+      margin-right: 8px;
+    }
+
+    .dynamic-delete-button {
+      cursor: pointer;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 24px;
+      transition: all 0.3s;
+    }
+  }
+}
