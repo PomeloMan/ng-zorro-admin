@@ -9,8 +9,12 @@ import {
   initFormControlConfig,
   validateForm,
 } from 'nz-admin';
-import { Breadcrumb, Layout } from '../../layout/content/content.component';
-import { Column, Table } from '../../layout/table/table.component';
+import {
+  Breadcrumb,
+  ContentComponent,
+  Layout,
+} from '../../layout/content/content.component';
+import { Column, TableDirective } from '../../layout/table/table.component';
 import {
   User,
   UserService,
@@ -95,12 +99,14 @@ const addFormItems: Array<NzaFormItem> = [
     valueType: 'object-array',
     valueAttrs: [
       {
+        id: 'contact_name',
         key: 'name',
         type: 'input',
         label: '联系人',
         validators: [Validators.required],
       },
       {
+        id: 'contact_phone',
         key: 'phone',
         type: 'input',
         label: '联系电话',
@@ -133,8 +139,9 @@ const columns: Array<Column> = [
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.less'],
 })
-export class UserComponent extends Table<User> implements OnInit {
+export class UserComponent extends TableDirective<User> implements OnInit {
   @Select(UserPageCacheState.getValues) pageCache$: Observable<UserPageCache>;
+  @ViewChild('layoutContent') layoutContentComponent: ContentComponent;
   @ViewChild('addFormComp') detailFormComponent: NzaFormComponent;
   // 页面缓存
   pageCacheKey = 'userPageCache';
@@ -200,4 +207,6 @@ export class UserComponent extends Table<User> implements OnInit {
   }
 
   delete(): void {}
+
+  print(): void {}
 }

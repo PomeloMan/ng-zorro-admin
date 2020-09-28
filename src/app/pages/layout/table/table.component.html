@@ -49,5 +49,8 @@
 </nz-table>
 
 <ng-template #rangeTemplate let-range="range" let-total>
-  {{ range[0] }}-{{ range[1] }} of {{ total }} items
+  {{
+    "common.pagination.total"
+      | translate: { start: range[0], end: range[1], total: total }
+  }}
 </ng-template>

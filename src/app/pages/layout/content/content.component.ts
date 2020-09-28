@@ -56,7 +56,14 @@ export class ContentComponent implements OnInit, AfterViewInit, OnDestroy {
   @Output() layoutChange: EventEmitter<Layout> = new EventEmitter();
 
   // layout = 'table' [nzScroll] 属性值
-  @Input() scroll: { x?: string; y?: string };
+  private _scroll: { x?: string; y?: string };
+  @Input() get scroll(): { x?: string; y?: string } {
+    return this._scroll;
+  }
+  set scroll(scroll: { x?: string; y?: string }) {
+    this._scroll = scroll;
+    this.scrollChange.emit(this.scroll);
+  }
   @Output() scrollChange: EventEmitter<{
     x?: string;
     y?: string;
@@ -169,7 +176,12 @@ export class ContentComponent implements OnInit, AfterViewInit, OnDestroy {
               (paginationEl ? paginationEl.clientHeight + 32 : 0)
             }px`,
           };
-          this.scrollChange.emit(this.scroll);
+
+          // 设置过渡动画
+          const tableBodyEl = tableEl.querySelector('.ant-table-body');
+          if (tableBodyEl) {
+            tableBodyEl.style.transition = 'all 0.3s';
+          }
         }
       }, 0);
     }

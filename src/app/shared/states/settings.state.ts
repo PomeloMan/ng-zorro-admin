@@ -5,6 +5,7 @@ import { SettingsService } from '../services/settings.service';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { NzaTheme, NzaMenuStyle } from 'nz-admin';
+import { NzSizeMDSType } from 'ng-zorro-antd/core/types';
 
 /**
  * 主题样式配置
@@ -13,10 +14,14 @@ export class Setting {
   theme?: NzaTheme; // 主题样式
   menuStyle?: NzaMenuStyle; // 菜单风格配置
   primaryColor?: string; // 主色，默认拂晓蓝'#1890ff'
+  tableSize?: NzSizeMDSType; // 表格大小
+  useTableScroll?: boolean; // 是否使用表格内滚动，true则需要设置<ant-table> scroll属性，false则使用页面滚动（perfect-scrollbar）
   constructor() {
     this.theme = 'default';
     this.menuStyle = 'sider-dark';
     this.primaryColor = '#1890ff';
+    this.tableSize = 'middle';
+    this.useTableScroll = true;
   }
 }
 /**

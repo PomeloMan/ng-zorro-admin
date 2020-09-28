@@ -5,12 +5,18 @@ import {
   TemplateRef,
   Output,
   EventEmitter,
+  ViewChild,
+  Directive,
 } from '@angular/core';
 import { NzaFormItem } from 'nz-admin';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { PageCache, PageCacheAction } from 'src/app/shared/states/page.state';
-import { Store } from '@ngxs/store';
+import { Select, Store } from '@ngxs/store';
+import { ContentComponent } from '../content/content.component';
+import { Setting, SettingState } from 'src/app/shared/states/settings.state';
+import { Observable } from 'rxjs';
+import { NzSizeMDSType } from 'ng-zorro-antd/core/types';
 
 export class Column {
   name: string; // 列名
@@ -62,9 +68,13 @@ export class TableComponent<T> implements OnInit {
 }
 
 /**
- * 列表公共属性
+ * 列表公共属性，方法指令组件
+ * 组件中使用 TableComponent 组件时，可继承此指令组件
  */
-export abstract class Table<T> {
+@Directive() // 由于使用了Angular @ViewChild功能，故需要将组件定义成Angular组件
+export abstract class TableDirective<T> {
+  @Select(SettingState.getValue) setting$: Observable<Setting>;
+  @ViewChild(ContentComponent) layoutContentComponent: ContentComponent;
   // 搜索表单
   searchForm: FormGroup;
   // 搜索条件
@@ -83,12 +93,37 @@ export abstract class Table<T> {
   keyword: string;
   // 当前页
   _pageIndex = 1;
+  get pageIndex(): number {
+    return this._pageIndex;
+  }
+  set pageIndex(pageIndex: number) {
+    this._pageIndex = pageIndex;
+  }
   // 每页显示数目
   _pageSize = 10;
+  get pageSize(): number {
+    return this._pageSize;
+  }
+  set pageSize(pageSize: number) {
+    this._pageSize = pageSize;
+  }
   // 页面缓存
   pageCache: PageCache = null;
   // 页面缓存键，用于获取指定页面的缓存数据
   pageCacheKey: string;
+  // 是否使用 table scroll，true 则需要补充 scroll x,y值，false 则 scroll = null，默认 true
+  _useScroll = true;
+  get useScroll(): boolean {
+    return this._useScroll;
+  }
+  set useScroll(useScroll: boolean) {
+    this._useScroll = useScroll;
+    this.scroll = null;
+    if (this.useScroll && this.layoutContentComponent) {
+      // 由不使用表格内滚动切换至表格内滚动时，需要手动触发组件resize()方法
+      this.layoutContentComponent.resize(false);
+    }
+  }
 
   /// 以下是详情公共属性
   // ID
@@ -104,18 +139,6 @@ export abstract class Table<T> {
   // 详情表单
   detailForm: FormGroup;
 
-  get pageIndex(): number {
-    return this._pageIndex;
-  }
-  set pageIndex(pageIndex: number) {
-    this._pageIndex = pageIndex;
-  }
-  get pageSize(): number {
-    return this._pageSize;
-  }
-  set pageSize(pageSize: number) {
-    this._pageSize = pageSize;
-  }
   // 是否默认展开高级搜索
   get showAdvanced(): boolean {
     let showAdvanced = false;
@@ -128,11 +151,24 @@ export abstract class Table<T> {
     return showAdvanced;
   }
 
+  // 此属性缓存Store中的tableSize字段，用于每次跟新Store.Setting后比对是否发生变化，发生变化触发resize()，节省性能
+  private _tableSizeCache: NzSizeMDSType;
+
   constructor(
     protected formBuilder: FormBuilder,
     protected store: Store,
     protected service: CommonService<T>
-  ) {}
+  ) {
+    this.setting$.subscribe((setting: Setting) => {
+      this.useScroll = !!setting.useTableScroll;
+      if (this._tableSizeCache !== setting.tableSize) {
+        this._tableSizeCache = setting.tableSize;
+        if (this.layoutContentComponent) {
+          this.layoutContentComponent.resize(false);
+        }
+      }
+    });
+  }
 
   // 初始化页面缓存数据
   initPageCache(): void {
@@ -179,6 +215,7 @@ export abstract class Table<T> {
   // 预留查询方法，具体子类实现
   getData(params?: any): void {}
 
+  // 展开详情
   showDetailDrawer(id?: string | number): void {
     this.id = id;
     this.detailForm?.reset();

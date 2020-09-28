@@ -9,8 +9,12 @@
   "common.grid": "栅格",
   "common.more": "更多",
   "common.operation": "操作",
+  "common.pagination.total": "{{start}}-{{end}} 项，共 {{total}} 项",
   "common.print": "打印",
   "common.quickSearch": "快速查询",
+  "common.size.large": "大",
+  "common.size.middle": "中",
+  "common.size.small": "小",
   "common.status": "状态",
   "common.table": "表格",
   "common.view": "查看",
@@ -45,5 +49,8 @@
   "settings.themeColor.magenta": "法式洋红（明快、感性）",
   "settings.theme.default": "默认主题",
   "settings.theme.dark": "暗黑主题",
-  "settings.theme.compact": "紧凑主题"
+  "settings.theme.compact": "紧凑主题",
+  "settings.componentStyle": "组件样式",
+  "settings.tableStyle.size": "表格尺寸大小",
+  "settings.tableStyle.useTableScroll": "表格组件内部滚动"
 }

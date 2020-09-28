@@ -2,7 +2,7 @@
   <!-- 菜单风格设置 -->
   <section class="menu-theme-wrapper">
     <h3>{{ "settings.menuStyle" | translate }}</h3>
-    <div class="selection-wrapper">
+    <div class="selection-wrapper clearfix">
       <ng-container
         *ngFor="let item of (settings$ | async)?.option?.menuStyles"
       >
@@ -56,4 +56,45 @@
     </div>
   </section>
   <nz-divider></nz-divider>
+  <!-- Table 样式 -->
+  <section class="table-style-wrapper">
+    <h3>{{ "settings.componentStyle" | translate }}</h3>
+    <div class="selection-wrapper clearfix">
+      <div class="radio-item">
+        {{ "settings.tableStyle.size" | translate }}
+        <nz-radio-group
+          [nzSize]="'small'"
+          [(ngModel)]="setting.tableSize"
+          nzButtonStyle="solid"
+        >
+          <ng-container *ngFor="let size of ['default', 'middle', 'small']">
+            <label
+              nz-radio-button
+              [nzValue]="size"
+              (click)="updateTableSize(size)"
+            >
+              {{
+                "common.size." + (size === "default" ? "large" : size)
+                  | translate
+              }}
+            </label>
+          </ng-container>
+        </nz-radio-group>
+      </div>
+      <div class="switch-item">
+        {{ "settings.tableStyle.useTableScroll" | translate }}
+        <nz-switch
+          [nzSize]="'small'"
+          [(ngModel)]="setting.useTableScroll"
+          [nzControl]="true"
+          [nzLoading]="!!setting.useTableScrollSwitching"
+          (click)="
+            switch('useTableScroll', {
+              useTableScroll: !setting.useTableScroll
+            })
+          "
+        ></nz-switch>
+      </div>
+    </div>
+  </section>
 </div>

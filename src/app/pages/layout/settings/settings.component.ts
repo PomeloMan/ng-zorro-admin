@@ -8,7 +8,8 @@ import {
 import { LazyService } from 'src/app/shared/services/lazy.service';
 import { DOCUMENT } from '@angular/common';
 import { Store, Select } from '@ngxs/store';
-import { NzMessageService } from 'ng-zorro-antd';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzConfigService } from 'ng-zorro-antd/core/config';
 import { Observable } from 'rxjs';
 import {
   SettingState,
@@ -16,6 +17,7 @@ import {
   Setting,
   SettingOption,
 } from '../../../shared/states/settings.state';
+import { NzSizeMDSType } from 'ng-zorro-antd';
 
 @Component({
   selector: 'nz-admin-layout-settings',
@@ -29,11 +31,12 @@ export class SettingsComponent implements OnInit {
     option: SettingOption;
   }>;
 
-  private setting: Setting;
+  setting: any;
 
   constructor(
     private store: Store,
     private msg: NzMessageService,
+    private readonly nzConfigService: NzConfigService,
     // 主题色
     private lazy: LazyService,
     private zone: NgZone,
@@ -46,7 +49,7 @@ export class SettingsComponent implements OnInit {
   ngOnInit(): void {
     // this.setting = this.store.selectSnaphot(SettingState.getValue);
     this.settings$.subscribe((data) => {
-      this.setting = data.value;
+      this.setting = { ...data.value };
     });
   }
 
@@ -63,12 +66,42 @@ export class SettingsComponent implements OnInit {
 
   /**
    * 切换主色
-   * @param color
+   * @param color 主色值
    */
   changeColor(color: string): void {
-    this.runLess(color);
+    return this.runLess(color);
   }
 
+  /**
+   * 切换表格组件尺寸大小
+   * @param size 'default' | 'middle' | 'size'
+   */
+  updateTableSize(size: NzSizeMDSType = 'middle'): void {
+    this.store
+      .dispatch(new SettingAction.Value({ tableSize: size }))
+      .subscribe(() => {
+        this.nzConfigService.set('table', {
+          nzSize: size,
+        });
+      });
+  }
+
+  /**
+   * 切换选项
+   * @param key 'useTableScroll' 表格内滚动切换
+   * @param value true | false；开启 | 关闭
+   */
+  switch(key?: string, value?: Setting): Promise<void> {
+    this.setting[`${key}Switching`] = true;
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        this.setting[`${key}`] = value;
+        this.store.dispatch(new SettingAction.Value(value));
+        this.setting[`${key}Switching`] = false;
+        resolve();
+      }, 1000);
+    });
+  }
   /************************* antd-theme-generator *************************/
   /**
    * 手动添加 less.js，default.less(/scripts/color.js输出文件)文件
@@ -107,7 +140,7 @@ export class SettingsComponent implements OnInit {
     const msgId = msg.loading(`正在编译主题！`, { nzDuration: 0 }).messageId;
     setTimeout(() => {
       zone.runOutsideAngular(() => {
-        this.loadLess()
+        return this.loadLess()
           .then(() => {
             (window as any).less
               .modifyVars({
