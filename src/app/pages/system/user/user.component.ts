@@ -22,6 +22,8 @@ import {
   UserPageCache,
 } from './user.service';
 import { I18nService } from '@core';
+import { htmlElementToImage } from 'src/app/shared/utils/index';
+import debounce from 'lodash.debounce';
 
 const searchFormItems: Array<NzaFormItem> = [
   {
@@ -149,6 +151,8 @@ export class UserComponent extends TableDirective<User> implements OnInit {
   breadcrumbs: Array<Breadcrumb> = [];
   // 布局配置
   layout: Layout = 'table';
+  // 是否导出
+  exporting = false;
 
   constructor(
     private router: Router,
@@ -176,6 +180,12 @@ export class UserComponent extends TableDirective<User> implements OnInit {
       ...breadcrumb,
       name: this.i18n.instant(breadcrumb.name),
     }));
+
+    // 添加防抖处理
+    this.export = debounce(this.export, 1000, {
+      leading: true, // 先触发，延迟时间内不再触发
+      trailing: false, // 后触发，延迟时间内触发最后一次
+    });
   }
 
   ngOnInit(): void {
@@ -209,4 +219,22 @@ export class UserComponent extends TableDirective<User> implements OnInit {
   delete(): void {}
 
   print(): void {}
+
+  /**
+   * 导出
+   * @param type 'PDF' | 'PNG'
+   */
+  export(type: 'PDF' | 'PNG' = 'PDF'): void {
+    this.exporting = true;
+    htmlElementToImage(
+      this.layoutContentComponent.scrollContentEl as HTMLElement,
+      type
+    )
+      .then((canvas) => {
+        this.exporting = false;
+      })
+      .catch(() => {
+        this.exporting = false;
+      });
+  }
 }
