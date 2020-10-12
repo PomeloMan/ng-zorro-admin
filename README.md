@@ -67,7 +67,7 @@
 ├── ├── ├── style.dark.css // 暗黑主题样式，切换主题时使用
 ├── ├── environments
 ├── ├── styles
-├── ├── ├── themes
+├── ├── ├── themes // 动态样式需要配置在此文件夹下
 ├── ├── ├── ├── default.less
 ├── ├── ├── empty.less
 ├── ├── ├── index.less
@@ -114,3 +114,6 @@ ng build --prod --stats-json
 ```
 npm run bundle-report
 ```
+
+## 3.文档
+* [动态主题](./doc/theme.md)
