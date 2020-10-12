@@ -37,7 +37,10 @@
             ],
             "scripts": [],
             "allowedCommonJsDependencies": [
-              "@ant-design/colors"
+              "@ant-design/colors",
+              "@babel/runtime",
+              "core-js",
+              "raf"
             ]
           },
           "configurations": {

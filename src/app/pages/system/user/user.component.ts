@@ -24,6 +24,7 @@ import {
 import { I18nService } from '@core';
 import { htmlElementToImage } from 'src/app/shared/utils/index';
 import debounce from 'lodash.debounce';
+import * as printJS from 'print-js';
 
 const searchFormItems: Array<NzaFormItem> = [
   {
@@ -218,7 +219,13 @@ export class UserComponent extends TableDirective<User> implements OnInit {
 
   delete(): void {}
 
-  print(): void {}
+  print(): void {
+    printJS({
+      printable: 'layoutContent',
+      type: 'html',
+      targetStyles: ['*'] // 继承原来的所有样式
+    });
+  }
 
   /**
    * 导出
