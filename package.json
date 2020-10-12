@@ -4,14 +4,15 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build --configuration=dev",
-    "build:prod": "ng build --prod --build--optimizer",
+    "build": "ng build --configuration=dev --stats-json",
+    "build:prod": "ng build --prod --build--optimizer --stats-json",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "theme": "node scripts/theme.js",
     "color": "node scripts/color.js",
-    "build:lib": "gulp build:library"
+    "build:lib": "gulp build:library",
+    "bundle-report": "webpack-bundle-analyzer dist/ng-zorro-admin/stats.json"
   },
   "private": true,
   "dependencies": {
@@ -71,6 +72,7 @@
     "resolve-bin": "^0.4.0",
     "ts-node": "^8.10.2",
     "tslint": "^6.1.0",
-    "typescript": "^3.9.5"
+    "typescript": "^3.9.5",
+    "webpack-bundle-analyzer": "^3.9.0"
   }
 }
